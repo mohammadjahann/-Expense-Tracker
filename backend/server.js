@@ -1,6 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
+import { conectDB } from './config/db.js'
+import dns from "node:dns";
+
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 const app = express()
 const port = 3000
@@ -11,9 +15,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 
-// DB
-
-
 
 // ROUTES
 
@@ -21,7 +22,10 @@ app.get('/', (req, res) => {
     res.send("API WORKING!")
 })
 
-app.listen(port, () => {
-    console.log(`Server Started on http://localhost:${port}`);
+conectDB()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server Started on http://localhost:${port}`);
 
-})
+        })
+    })
