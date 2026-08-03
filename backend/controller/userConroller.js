@@ -13,7 +13,7 @@ const createToken = (userId) => {
 
 // register user
 
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
 
     const { name, email, password } = req.body
 
@@ -73,3 +73,67 @@ const registerUser = async (req, res) => {
     }
 
 }
+
+// To login user
+
+export const loginUser = async (req, res) => {
+
+    const { email, password } = req.body
+
+    if (!email || !password) {
+        return res.status(400).json({
+            success: false,
+            message: "Both fields are required."
+        })
+    }
+
+    try {
+
+        const user = await User.findOne({ email })
+
+        if (!user) {
+
+            return res.status(401).json({
+                success: false,
+                message: "Invallid email or password"
+            })
+
+        }
+
+        const match = await bcrypt.compare(password, user.password)
+
+        if (!match) {
+
+            return res.status(401).json({
+                success: false,
+                message: "Invallid email or password"
+            })
+
+        }
+
+        const token = createToken(user._id)
+
+        res.json({
+            success: true,
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        })
+
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+
+    }
+
+}
+
