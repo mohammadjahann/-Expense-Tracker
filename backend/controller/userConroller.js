@@ -137,3 +137,35 @@ export const loginUser = async (req, res) => {
 
 }
 
+// to get login user details 
+
+export const getCurrentUser = async (req, res) => {
+
+    try {
+        const user = await User.findById(req.user.id).select("name email")
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not Found"
+            })
+        }
+
+        res.json({
+            success: true,
+            user
+        })
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+
+    }
+
+}
+
