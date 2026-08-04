@@ -1,5 +1,5 @@
 import validator from 'validator'
-import { User } from '../models/userModel.js'
+import User from '../models/userModel.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
@@ -169,3 +169,49 @@ export const getCurrentUser = async (req, res) => {
 
 }
 
+
+// to Updata a user Profile 
+export const updateProfile = async (req, res) => {
+
+    const { email, name } = req.body
+
+    if (!email || !name || !validator.isEmail(email)) {
+        return res.status(400).json({
+            success: false,
+            message: "Valid email and name required."
+        })
+    }
+
+    try {
+
+        const exist = await User.findOne({ email, _id: { $ne: req.user.id } })
+
+        if (exist) {
+            return res.status(409).json({
+                success: false,
+                message: "Email Already in use"
+            })
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { name, email },
+            { new: true, runValidators: true }
+        ).select("name email")
+
+        res.json({
+            success: true,
+            user
+        })
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+
+}
