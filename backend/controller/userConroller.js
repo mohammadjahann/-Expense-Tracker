@@ -215,3 +215,64 @@ export const updateProfile = async (req, res) => {
     }
 
 }
+
+// Change Password
+
+export const updatePassword = async (req, res) => {
+
+    const { currentPssword, newPassword } = req.body
+
+    if (!currentPssword || !newPassword || newPassword.length < 8) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid password or too short"
+        })
+    }
+
+    try {
+
+        const user = await User.findById(req.user.id).select("password")
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        const match = await bcrypt.compare(currentPssword, user.password)
+
+        if (!match) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Wrong password"
+            })
+        }
+
+        const hashed = await bcrypt.hash(newPassword, 10)
+
+        await User.findByIdAndUpdate(
+            req.user.id,
+            { password: hashed }
+        )
+
+        res.json({
+            success: true,
+            message: "Password updated",
+        })
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+
+    }
+
+
+
+}
