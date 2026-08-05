@@ -1,0 +1,35 @@
+import mongoose from 'mongoose'
+
+
+const incomeSchema = new mongoose.Schema({
+    description: {
+        type: String,
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true,
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+        required: true
+    },
+    type: {
+        type: String,
+        default: "income"
+    }
+
+}, { timestamps: true })
+
+const Income = mongoose.model("Income", incomeSchema)
+
+export default Income
