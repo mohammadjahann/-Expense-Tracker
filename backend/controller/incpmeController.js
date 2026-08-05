@@ -71,3 +71,45 @@ export const getAllIncome = async (req, res) => {
     }
 
 }
+
+// Update income
+
+export const updateIncome = async (req, res) => {
+    const { id } = req.params
+    const userId = req.user._id
+    const { description, amount } = req.body;
+
+    try {
+
+        const updatedIncome = await Income.findOneAndUpdate({
+            _id: id, userId
+        }, {
+            description, amount
+        }, {
+            returnDocument: 'after'
+        })
+
+        if (!updatedIncome) {
+            return res.status(404).json({
+                success: false,
+                message: "Income not found"
+            })
+        }
+
+        res.json({
+            success: true,
+            updatedIncome,
+            message: "Income updated successfully."
+        })
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        })
+
+    }
+}
