@@ -1,5 +1,6 @@
 import Income from '../models/incomeModel.js'
 import XLSX from 'xlsx'
+import getDataRange from "../utils/dataFilter.js";
 
 // Add income
 
@@ -188,4 +189,47 @@ export const downloadIncomeExcel = async (req, res) => {
             message: "Server Error"
         })
     }
+}
+
+// To get income overview
+
+export const getIncomeOverview = async (req, res) => {
+
+    try{
+        const userId = req.user._id
+        const {range ="monthly"} = req.query
+        const {start,end}=getDataRange(range)
+
+        const incomes = await Income.find({
+            userId: userId,
+            date :{
+                $gte:start,$lte:end
+            }
+        }).sort({date: -1})
+
+        const totalIncome = incomes.reduce((acc,cur)=> acc+cur.amount,0)
+        const averageIncome = incomes.length > 0 ? totalIncome / totalIncome : 0
+        const numberOfTransactions = incomes.length;
+
+        const recentTransactions = incomes.slice(0,9)
+
+        res.json({
+            success: true,
+            data:{
+                totalIncome,
+                averageIncome,
+                numberOfTransactions,
+                recentTransactions,
+                range
+            }
+        })
+
+    }catch (e) {
+        console.log(e)
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        })
+    }
+
 }
