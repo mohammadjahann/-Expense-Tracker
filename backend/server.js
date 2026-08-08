@@ -4,6 +4,7 @@ import 'dotenv/config'
 import { conectDB } from './config/db.js'
 import dns from "node:dns";
 import userRoute from './routes/userRoute.js';
+import incomeRoute  from "./routes/incomeRoute.js";
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 // ROUTES
 
 app.use('/api/user', userRoute)
+app.use('/api/income', incomeRoute)
 
 app.get('/', (req, res) => {
     res.send("API WORKING!")
