@@ -1,4 +1,5 @@
 import Expense from "../models/expenseModel.js";
+import XLSX from "xlsx";
 
 
 
@@ -154,6 +155,38 @@ export const deleteExpense = async (req, res) => {
             message:"Internal Server Error"
         })
 
+    }
+
+}
+
+// Download Excel
+
+export const downloadExpenseExcel = async (req, res) => {
+
+    const userId = req.user.id
+
+    try {
+        const expenses = await Expense.find({userId}).sort({date : -1}).lean()
+        const plainData = expenses.map(exp=>({
+            Description :exp.description,
+            Amount:exp.amount,
+            Category:exp.category,
+            Date : new Date(exp.date).toLocaleDateString()
+        }))
+
+        const workSheet = XLSX.utils.json_to_sheet(plainData)
+        const workBook = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(workBook, workSheet,"Expense")
+        XLSX.writeFile(workBook,"Expense_Details.xlsx")
+        res.download("Expense_Details.xlsx")
+
+    } catch (error) {
+
+        console.log(error)
+        return res.status(500).json({
+            success: false,
+            message:"Internal Server Error"
+        })
     }
 
 }
