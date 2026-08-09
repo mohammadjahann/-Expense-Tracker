@@ -120,3 +120,40 @@ export const updateExpense = async (req, res) => {
 
     }
 }
+
+// Delete Expense
+
+export const deleteExpense = async (req, res) => {
+    const userId = req.user.id
+    const expenseId = req.params.id
+
+    try {
+
+        const deletedExpense = await Expense.findOneAndDelete({
+            userId,_id:expenseId
+        })
+
+        if (!deletedExpense){
+            return res.status(404).json({
+                success: false,
+                message:"Expense Not Found"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message:"Expense successfully deleted"
+        })
+
+
+    } catch (error) {
+
+        console.log(error)
+        return res.status(400).json({
+            success: false,
+            message:"Internal Server Error"
+        })
+
+    }
+
+}
