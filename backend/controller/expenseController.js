@@ -1,5 +1,7 @@
 import Expense from "../models/expenseModel.js";
 import XLSX from "xlsx";
+import getDataRange from "../utils/dataFilter.js";
+import Income from "../models/incomeModel.js";
 
 
 
@@ -90,7 +92,7 @@ export const updateExpense = async (req, res) => {
 
     try {
 
-        const updatedExpense = await Expense.findByIdAndUpdate({
+        const updatedExpense = await Expense.findOneAndUpdate({
             userId,_id:expenseId
         },{
             description, amount
@@ -189,4 +191,45 @@ export const downloadExpenseExcel = async (req, res) => {
         })
     }
 
+}
+
+// To Get Overview of Expense
+
+export const getExpenseOverview= async (req, res) => {
+    try{
+        const userId = req.user._id
+        const {range ="monthly"} = req.query
+        const {start,end}=getDataRange(range)
+
+        const expenses = await Expense.find({
+            userId: userId,
+            date :{
+                $gte:start,$lte:end
+            }
+        }).sort({date: -1})
+
+        const totalExpense = expenses.reduce((acc,cur)=> acc+cur.amount,0)
+        const averageExpense = expenses.length > 0 ? totalExpense / expenses.length : 0
+        const numberOfTransactions = expenses.length;
+
+        const recentTransactions = expenses.slice(0,5)
+
+        res.json({
+            success: true,
+            data:{
+                totalExpense,
+                averageExpense,
+                numberOfTransactions,
+                recentTransactions,
+                range
+            }
+        })
+
+    }catch (e) {
+        console.log(e)
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        })
+    }
 }
