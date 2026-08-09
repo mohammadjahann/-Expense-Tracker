@@ -5,6 +5,7 @@ import { conectDB } from './config/db.js'
 import dns from "node:dns";
 import userRoute from './routes/userRoute.js';
 import incomeRoute  from "./routes/incomeRoute.js";
+import expenseRoute from "./routes/expenseRoute.js";
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/user', userRoute)
 app.use('/api/income', incomeRoute)
+app.use('/api/expense', expenseRoute)
 
 app.get('/', (req, res) => {
     res.send("API WORKING!")
