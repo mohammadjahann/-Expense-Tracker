@@ -43,3 +43,34 @@ export const addExpense = async (req, res) => {
         })
     }
 }
+
+// To get all user expense
+
+export const getAllExpenses = async (req, res) => {
+
+    const userId = req.user._id
+
+    if (!userId){
+        return res.status(400).json({
+            success: false,
+            message:"Incorrect user id"
+        })
+    }
+
+    try {
+
+        const expanses = await Expense.find({userId}).sort({date:-1})
+
+        res.status(200).json(expanses)
+
+    } catch (error) {
+
+        console.log(error)
+        return res.status(400).json({
+            success: false,
+            message:"Internal Server Error"
+        })
+    }
+
+
+}
