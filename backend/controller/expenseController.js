@@ -71,6 +71,52 @@ export const getAllExpenses = async (req, res) => {
             message:"Internal Server Error"
         })
     }
+}
 
+// To update expense
 
+export const updateExpense = async (req, res) => {
+    const userId = req.user._id
+    const {description, amount} = req.body
+    const expenseId = req.params.id
+
+    if (!description || !amount){
+        return res.status(400).json({
+            success: false,
+            message:"All fields are required"
+        })
+    }
+
+    try {
+
+        const updatedExpense = await Expense.findByIdAndUpdate({
+            userId,_id:expenseId
+        },{
+            description, amount
+        },{
+            new:true
+        }).select("-createdAt -updatedAt -__v")
+
+        if (!updatedExpense){
+            return res.status(404).json({
+                success: false,
+                message:"Expense Not Found"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message:"Expense successfully updated",
+            updatedExpense
+        })
+
+    } catch (error) {
+
+        console.log(error)
+        return res.status(400).json({
+            success: false,
+            message:"Internal Server Error"
+        })
+
+    }
 }
