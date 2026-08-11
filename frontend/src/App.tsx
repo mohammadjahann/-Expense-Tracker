@@ -1,5 +1,6 @@
 import { useRoutes } from "react-router-dom"
 import Routes from "./Routes"
+import AppContextProvider from "./context/appContext"
 
 const App = () => {
 
@@ -7,7 +8,9 @@ const App = () => {
 
   return (
     <div>
-      {router}
+      <AppContextProvider>
+        {router}
+      </AppContextProvider>
     </div>
   )
 }
