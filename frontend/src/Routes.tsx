@@ -1,10 +1,11 @@
-import { Outlet, type RouteObject } from "react-router-dom";
+import { type RouteObject } from "react-router-dom";
+import Layout from "./layouts/layout";
 
 
 
 const Routes: RouteObject[] = [
     {
-        element: <div>layout <Outlet /></div>, children: [
+        element: <Layout />, children: [
             { path: '/', element: <div>dashboard</div> }
         ]
     },
