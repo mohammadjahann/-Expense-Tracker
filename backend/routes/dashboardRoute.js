@@ -1,7 +1,7 @@
 import express from 'express'
 
-import { getDashboardOverview } from '../controller/dashboardController'
-import authMiddleware from '../middleware/auth'
+import { getDashboardOverview } from '../controller/dashboardController.js'
+import authMiddleware from '../middleware/auth.js'
 
 
 
