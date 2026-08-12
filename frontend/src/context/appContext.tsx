@@ -1,9 +1,14 @@
-import React, { createContext } from "react";
+import React, { createContext, useState, type Dispatch, type SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
+import type { UserDetail } from "../Types";
 
 type ContextTypes = {
 
-    handleLogout: () => void
+    handleLogout: () => void,
+    userDetails: UserDetail | null,
+    setUserDetails: Dispatch<SetStateAction<UserDetail | null>>
+    token: string | null,
+    setToken: Dispatch<SetStateAction<string | null>>
 
 }
 
@@ -12,6 +17,9 @@ type ContextTypes = {
 const AppContext = createContext<null | ContextTypes>(null)
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
+
+    const [userDetails, setUserDetails] = useState<UserDetail | null>(null)
+    const [token, setToken] = useState<string | null>(null)
 
 
 
@@ -38,7 +46,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <AppContext value={{ handleLogout }}>
+        <AppContext value={{ handleLogout, userDetails, setUserDetails, token, setToken }}>
 
             {children}
 
