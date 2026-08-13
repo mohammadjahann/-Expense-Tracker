@@ -19,7 +19,10 @@ const AppContext = createContext<null | ContextTypes>(null)
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [userDetails, setUserDetails] = useState<UserDetail | null>(null)
-    const [token, setToken] = useState<string | null>(null)
+    const [token, setToken] = useState<string | null>(
+        () => localStorage.getItem("token")
+    )
+
 
 
 
