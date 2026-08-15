@@ -3,3 +3,15 @@ export type UserDetail = {
     name: string,
     email: string
 }
+
+export type FetchUser = {
+    success: string,
+    user: UserDetail
+}
+
+export type SuccessLoginData = {
+    success: boolean,
+    user: UserDetail,
+    token: string
+}
+
