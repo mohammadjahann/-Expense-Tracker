@@ -1,5 +1,6 @@
 import { type RouteObject } from "react-router-dom";
 import Layout from "./layouts/layout";
+import LoginPage from "./features/auth/pages/LoginPage";
 
 
 
@@ -9,7 +10,7 @@ const Routes: RouteObject[] = [
             { path: '/', element: <div>dashboard</div> }
         ]
     },
-    { path: "login", element: <div>log in</div> }
+    { path: "/login", element: <LoginPage /> }
 ]
 
 export default Routes
