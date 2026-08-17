@@ -9,9 +9,3 @@ export type FetchUser = {
     user: UserDetail
 }
 
-export type SuccessLoginData = {
-    success: boolean,
-    user: UserDetail,
-    token: string
-}
-
