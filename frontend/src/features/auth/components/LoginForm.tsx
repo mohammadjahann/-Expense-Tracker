@@ -4,6 +4,7 @@ import { MdEmail } from "react-icons/md";
 import { LuLock } from "react-icons/lu";
 import { FaEyeSlash } from "react-icons/fa";
 import { useLogin } from "../hooks/useLogin";
+import { Link } from "react-router-dom";
 
 export const LoginForm = () => {
     const { email, setEmail, password, setPassword, showPassword, setShowPassword, rememberMe, setRememberMe, error, isLoading, handleSubmit, } = useLogin();
@@ -98,6 +99,19 @@ export const LoginForm = () => {
                         {isLoading ? "درحال وارد شدن..." : "ورود به اکانت"}
                     </button>
                 </form>
+
+                {/* Sign up call to action */}
+
+                <div className="mt-8 text-center">
+                    <p className="text-gray-600">
+                        اکانت ندارید ؟ {" "}
+                        <Link to={'/signup'} className="font-medium text-teal-600 hover:underline">
+                            ساخت اکانت
+                        </Link>
+                    </p>
+
+                </div>
+
             </div>
         </div>
     );
