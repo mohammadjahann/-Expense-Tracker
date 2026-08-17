@@ -5,6 +5,7 @@ import { AxiosError } from "axios";
 import { fetchProfileApi, loginApi } from "../api/authApi";
 import useAppContext from "../../../hooks/useAppContext";
 import type { UserDetail } from "../../../Types";
+import persistAuth from "../utils/persistAuth";
 
 export const useLogin = () => {
     const [email, setEmail] = useState("");
@@ -16,16 +17,6 @@ export const useLogin = () => {
 
     const { setUserDetails, setToken } = useAppContext();
     const navigate = useNavigate();
-
-    const persistAuth = (profile: unknown, token: string) => {
-        const storage = rememberMe ? localStorage : sessionStorage;
-        try {
-            if (token) storage.setItem("token", token);
-            if (profile) storage.setItem("user", JSON.stringify(profile));
-        } catch (err) {
-            console.error("Storage error:", err);
-        }
-    };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -54,7 +45,7 @@ export const useLogin = () => {
                 return;
             }
 
-            persistAuth(profile, data.token);
+            persistAuth(profile, data.token, rememberMe);
             setToken(data.token);
             setUserDetails(profile);
             navigate("/dashboard");
